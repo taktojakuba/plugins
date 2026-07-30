@@ -3,9 +3,10 @@ local SCRIPT_DIR = noctalia.pluginDir() .. "/"
 function update()
   noctalia.setUpdateInterval(100)
   local w = noctalia.getConfig("width") or 30
+  local g = noctalia.getConfig("sensitivity") or 1.5
 
   noctalia.runAsync(
-    "SIZE=" .. w .. " " .. SCRIPT_DIR .. "visualizer.sh",
+    "SIZE=" .. w .. " GAIN=" .. g .. " " .. SCRIPT_DIR .. "visualizer.sh",
     function(result)
       if result.exitCode == 0 then
         local viz = result.stdout:gsub("%s+$", "")

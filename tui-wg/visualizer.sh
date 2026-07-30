@@ -1,6 +1,7 @@
 #!/bin/bash
 
 SIZE=${SIZE:-30}
+GAIN=${GAIN:-1.5}
 if [ "$SIZE" = "auto" ]; then
   WIDTH=$(tput cols 2>/dev/null || echo 40)
 else
@@ -35,8 +36,8 @@ if [ "${level_int:-0}" -lt 8 ]; then
   exit 0
 fi
 
-body=$(awk -v l="$level" -v w="$WIDTH" 'BEGIN{
-  g=l*1.5; if(g>1)g=1; b=int(g*(w-4)+0.5); if(b<0)b=0; if(b>w-4)b=w-4; print b
+body=$(awk -v l="$level" -v w="$WIDTH" -v g="$GAIN" 'BEGIN{
+  g=l*g; if(g>1)g=1; b=int(g*(w-4)+0.5); if(b<0)b=0; if(b>w-4)b=w-4; print b
 }')
 pad=$((WIDTH - 4 - body))
 lpad=$((pad / 2))

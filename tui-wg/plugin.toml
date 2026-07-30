@@ -52,6 +52,14 @@ entry = "visualizer.luau"
   min       = 10
   max       = 500
 
+  [[widget.setting]]
+  key       = "sensitivity"
+  type      = "float"
+  label_key = "settings.sensitivity.label"
+  default   = 1.5
+  min       = 0.1
+  max       = 10.0
+
 [[widget]]
 id    = "separator"
 entry = "separator.luau"
