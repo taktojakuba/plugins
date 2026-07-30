@@ -1,6 +1,6 @@
 id         = "taktojakuba/tui-wg"
 name       = "tui-wg"
-version    = "0.4.7"
+version    = "0.4.9"
 plugin_api = 3
 author     = "taktojakuba"
 
@@ -51,3 +51,25 @@ entry = "visualizer.luau"
   default   = 30
   min       = 10
   max       = 500
+
+[[widget]]
+id    = "separator"
+entry = "separator.luau"
+
+[[widget]]
+id    = "slash-separator"
+entry = "slash-separator.luau"
+
+[[widget]]
+id    = "brackets"
+entry = "brackets.luau"
+
+  [[widget.setting]]
+  key       = "side"
+  type      = "select"
+  label_key = "settings.side.label"
+  default   = "left"
+  options   = [
+    { value = "left",  label_key = "settings.side.left" },
+    { value = "right", label_key = "settings.side.right" },
+  ]
