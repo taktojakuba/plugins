@@ -1,5 +1,5 @@
 #!/bin/bash
 
-LOCATION="${LOCATION:-Malbork}"
+LOCATION="${LOCATION:-Warsaw}"
 curl -s "wttr.in/${LOCATION}?format=%C"
 echo
