@@ -58,7 +58,7 @@ entry = "visualizer.luau"
   label_key = "settings.sensitivity.label"
   default   = 1.5
   min       = 0.1
-  max       = 10.0
+  max       = 150.0
 
   [[widget.setting]]
   key       = "interval"
