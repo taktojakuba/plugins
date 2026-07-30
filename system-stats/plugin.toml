@@ -1,0 +1,39 @@
+id         = "kuba/system-stats"
+name       = "system-stats"
+version    = "1.0.0"
+plugin_api = 3
+author     = "kuba"
+
+[[widget]]
+id    = "volume"
+entry = "volume.luau"
+[[widget]]
+id    = "powerprofile"
+entry = "powerprofile.luau"
+[[widget]]
+id    = "battery"
+entry = "battery.luau"
+[[widget]]
+id    = "wifi"
+entry = "wifi.luau"
+[[widget]]
+id    = "cpu"
+entry = "cpu.luau"
+[[widget]]
+id    = "ram"
+entry = "ram.luau"
+
+[[widget]]
+id = "weather"
+entry = "weather.luau"
+[[widget]]
+id    = "viz"
+entry = "visualizer.luau"
+
+  [[widget.setting]]
+  key       = "width"
+  type      = "int"
+  label_key = "settings.width.label"
+  default   = 30
+  min       = 10
+  max       = 500
