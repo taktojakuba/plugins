@@ -9,6 +9,22 @@ else
 fi
 [ "$WIDTH" -lt 10 ] && WIDTH=40
 
+if [ "$WIDTH" -lt 14 ]; then
+  NBANDS=4
+elif [ "$WIDTH" -lt 18 ]; then
+  NBANDS=6
+elif [ "$WIDTH" -lt 30 ]; then
+  NBANDS=8
+elif [ "$WIDTH" -lt 45 ]; then
+  NBANDS=12
+else
+  NBANDS=16
+fi
+
+max_bands=$((WIDTH - 2))
+[ "$NBANDS" -gt "$max_bands" ] && NBANDS=$max_bands
+[ "$NBANDS" -lt 2 ] && NBANDS=2
+
 RATE=44100
 
 MONITOR=$(pactl list sources short 2>/dev/null \
@@ -16,35 +32,59 @@ MONITOR=$(pactl list sources short 2>/dev/null \
 [ -z "$MONITOR" ] && MONITOR=$(pactl list sources short 2>/dev/null \
   | grep -m1 monitor | awk '{print $2}')
 
-level=$(timeout 0.2 parec --raw --format=s16le --rate=$RATE --channels=1 \
+spectrum=$(timeout 0.2 parec --raw --format=s16le --rate=$RATE --channels=1 \
   --latency-msec=50 -d "$MONITOR" 2>/dev/null \
   | od -An -td2 -v \
-  | awk '{
-    for(i=1;i<=NF;i++){
-      v=$i<0?-$i:$i
-      s+=v*v; n++
+  | awk -v n="$NBANDS" -v gain="$GAIN" '
+BEGIN {
+  pi = 3.141592653589793
+  fmin = 63; fmax = 8000
+  lr = log(fmax / fmin) / (n - 1)
+  for (b = 1; b <= n; b++) {
+    f = fmin * exp(lr * (b - 1))
+    o = 2 * pi * f / 44100
+    c[b] = 2 * cos(o)
+    s1[b] = 0; s2[b] = 0
+  }
+  N = 0; e = 0
+}
+{
+  for (i = 1; i <= NF; i++) {
+    x = $i
+    e += (x < 0 ? -x : x)
+    for (b = 1; b <= n; b++) {
+      s0 = x + c[b] * s1[b] - s2[b]
+      s2[b] = s1[b]; s1[b] = s0
     }
-  } END {
-    if(n>0) printf "%.6f", sqrt(s/n)/32768
-    else print "0"
-  }')
+    N++
+  }
+}
+END {
+  if (N < 100 || e / N / 32768 < 0.005) { print "QUIET"; exit }
+  for (b = 1; b <= n; b++) {
+    p = s1[b]^2 + s2[b]^2 - s1[b] * s2[b] * c[b]
+    v = sqrt(p / (N * N)) / 32768 * gain
+    if (v > 0.15) printf "1" ; else printf "0"
+    if (b < n) printf " " ; else printf "\n"
+  }
+}')
 
-level_int=$(awk -v l="$level" 'BEGIN{printf "%d", int(l*1000)}')
-if [ "${level_int:-0}" -lt 8 ]; then
-  printf '%*s' "$WIDTH" | tr ' ' '-'
+if [ -z "$spectrum" ] || [ "$spectrum" = "QUIET" ]; then
+  printf "%*s" "$WIDTH" | tr " " "-"
   echo
   exit 0
 fi
 
-body=$(awk -v l="$level" -v w="$WIDTH" -v g="$GAIN" 'BEGIN{
-  g=l*g; if(g>1)g=1; b=int(g*(w-4)+0.5); if(b<0)b=0; if(b>w-4)b=w-4; print b
-}')
-pad=$((WIDTH - 4 - body))
-lpad=$((pad / 2))
-rpad=$((pad - lpad))
-[ "$lpad" -gt 0 ] && printf '%*s' "$lpad" | tr ' ' '-'
-printf '/'
-[ "$body" -gt 0 ] && printf '%*s' "$body" | tr ' ' '='
-printf '\\'
-[ "$rpad" -gt 0 ] && printf '%*s' "$rpad" | tr ' ' '-'
+body=""
+for v in $spectrum; do
+  if [ "$v" = "1" ]; then body="${body}="; else body="${body}-"; fi
+done
+
+inner=$(( ${#body} + 2 ))
+pd=$((WIDTH - inner))
+lp=$((pd / 2))
+rp=$((pd - lp))
+[ "$lp" -gt 0 ] && printf "%*s" "$lp" | tr " " "-"
+printf '/%s\\' "$body"
+[ "$rp" -gt 0 ] && printf "%*s" "$rp" | tr " " "-"
 echo
