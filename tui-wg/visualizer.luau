@@ -1,7 +1,8 @@
 local SCRIPT_DIR = noctalia.pluginDir() .. "/"
 
 function update()
-  noctalia.setUpdateInterval(100)
+  local u = noctalia.getConfig("interval") or 100
+  noctalia.setUpdateInterval(u)
   local w = noctalia.getConfig("width") or 30
   local g = noctalia.getConfig("sensitivity") or 1.5
 

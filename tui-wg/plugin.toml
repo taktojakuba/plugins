@@ -60,6 +60,15 @@ entry = "visualizer.luau"
   min       = 0.1
   max       = 10.0
 
+  [[widget.setting]]
+  key       = "interval"
+  type      = "int"
+  label_key = "settings.updateinterval.label"
+  default   = 100
+  min       = 1
+  max       = 150
+
+
 [[widget]]
 id    = "separator"
 entry = "separator.luau"
