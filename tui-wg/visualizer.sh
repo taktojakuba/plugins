@@ -21,7 +21,7 @@ else
   NBANDS=16
 fi
 
-max_bands=$((WIDTH - 2))
+max_bands=$WIDTH
 [ "$NBANDS" -gt "$max_bands" ] && NBANDS=$max_bands
 [ "$NBANDS" -lt 2 ] && NBANDS=2
 
@@ -86,15 +86,40 @@ END {
 }')
 
 if [ -z "$spectrum" ] || [ "$spectrum" = "QUIET" ]; then
-  printf "%*s" "$WIDTH" | tr " " "-"
-  echo
-  exit 0
+  raw=""
+  for ((b = 0; b < NBANDS; b++)); do
+    [ -n "$raw" ] && raw="$raw "
+    raw="${raw}0"
+  done
+else
+  raw="$spectrum"
 fi
 
+FADE_FILE="/tmp/tui-wg-viz-fade"
+prev_fade=()
+[ -f "$FADE_FILE" ] && read -ra prev_fade < "$FADE_FILE" 2>/dev/null
+
+new_fade=()
 body=""
-for v in $spectrum; do
-  if [ "$v" = "1" ]; then body="${body}="; else body="${body}-"; fi
+idx=0
+for v in $raw; do
+  pc=${prev_fade[$idx]:-0}
+  if [ "$v" = "1" ]; then
+    nc=2
+    fb="="
+  elif [ "$pc" -gt 0 ]; then
+    nc=$((pc - 1))
+    fb="="
+  else
+    nc=0
+    fb="-"
+  fi
+  new_fade[$idx]=$nc
+  body="${body}${fb}"
+  idx=$((idx + 1))
 done
+
+echo "${new_fade[*]}" > "$FADE_FILE"
 
 pd=$((WIDTH - ${#body}))
 lp=$((pd / 2))
