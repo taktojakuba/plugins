@@ -46,26 +46,42 @@ BEGIN {
     c[b] = 2 * cos(o)
     s1[b] = 0; s2[b] = 0
   }
-  N = 0; e = 0
+  chunk = 1024
+  ci = 0; ch = 0; N = 0; e = 0
 }
 {
   for (i = 1; i <= NF; i++) {
     x = $i
     e += (x < 0 ? -x : x)
+    ci++; N++
     for (b = 1; b <= n; b++) {
       s0 = x + c[b] * s1[b] - s2[b]
       s2[b] = s1[b]; s1[b] = s0
     }
-    N++
+    if (ci >= chunk) {
+      for (b = 1; b <= n; b++) {
+        p = s1[b]^2 + s2[b]^2 - s1[b] * s2[b] * c[b]
+        ps[b] += p / (ci * ci)
+        s1[b] = 0; s2[b] = 0
+      }
+      ci = 0; ch++
+    }
   }
 }
 END {
-  if (N < 100 || e / N / 32768 < 0.005) { print "QUIET"; exit }
+  if (ci > 100) {
+    for (b = 1; b <= n; b++) {
+      p = s1[b]^2 + s2[b]^2 - s1[b] * s2[b] * c[b]
+      ps[b] += p / (ci * ci)
+      s1[b] = 0; s2[b] = 0
+    }
+    ch++
+  }
+  if (ch < 1 || e / N / 32768 < 0.005) { print "QUIET"; exit }
   for (b = 1; b <= n; b++) {
-    p = s1[b]^2 + s2[b]^2 - s1[b] * s2[b] * c[b]
-    v = sqrt(p / (N * N)) / 32768 * gain
-    if (v > 0.15) printf "1" ; else printf "0"
-    if (b < n) printf " " ; else printf "\n"
+    v = sqrt(ps[b] / ch) / 32768 * gain
+    if (v > 0.08) printf "1"; else printf "0"
+    if (b < n) printf " "; else printf "\n"
   }
 }')
 
