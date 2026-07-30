@@ -1,8 +1,10 @@
+local SCRIPT_DIR = noctalia.pluginDir() .. "/"
+
 function update()
   noctalia.setUpdateInterval(100)
 
   noctalia.runAsync(
-    noctalia.expandPath("~/.config/noctalia/plugins/system-stats/volume.sh"),
+    SCRIPT_DIR .. "volume.sh",
     function(result)
       if result.exitCode == 0 then
         local vol = result.stdout:gsub("%s+$", "")

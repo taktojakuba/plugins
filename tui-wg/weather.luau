@@ -1,8 +1,11 @@
+local SCRIPT_DIR = noctalia.pluginDir() .. "/"
+
 function update()
   noctalia.setUpdateInterval(100000)
+  local location = noctalia.getConfig("location") or "Warsaw"
 
   noctalia.runAsync(
-    noctalia.expandPath("~/.config/noctalia/plugins/system-stats/weather.sh"),
+    "LOCATION=" .. location .. " " .. SCRIPT_DIR .. "weather.sh",
     function(result)
       if result.exitCode == 0 then
         local status = result.stdout:gsub("%s+$", "")

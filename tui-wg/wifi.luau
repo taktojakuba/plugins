@@ -1,8 +1,11 @@
+local SCRIPT_DIR = noctalia.pluginDir() .. "/"
+
 function update()
   noctalia.setUpdateInterval(10000)
+  local iface = noctalia.getConfig("wifi_interface") or "wlan0"
 
   noctalia.runAsync(
-    noctalia.expandPath("~/.config/noctalia/plugins/system-stats/wifi.sh"),
+    "WIFI_IFACE=" .. iface .. " " .. SCRIPT_DIR .. "wifi.sh",
     function(result)
       if result.exitCode == 0 then
         local wifi = result.stdout:gsub("%s+$", "")

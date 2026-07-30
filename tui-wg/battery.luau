@@ -1,8 +1,10 @@
+local SCRIPT_DIR = noctalia.pluginDir() .. "/"
+
 function update()
   noctalia.setUpdateInterval(5000)
 
   noctalia.runAsync(
-    noctalia.expandPath("~/.config/noctalia/plugins/system-stats/battery.sh"),
+    SCRIPT_DIR .. "battery.sh",
     function(result)
       if result.exitCode == 0 then
         local battery = result.stdout:gsub("%s+$", "")

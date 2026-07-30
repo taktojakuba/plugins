@@ -1,4 +1,4 @@
-local SCRIPT_DIR = noctalia.expandPath("~/.config/noctalia/plugins/system-stats/")
+local SCRIPT_DIR = noctalia.pluginDir() .. "/"
 
 local function refresh()
   noctalia.runAsync(SCRIPT_DIR .. "powerprofile.sh", function(result)

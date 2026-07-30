@@ -1,8 +1,8 @@
-id         = "kuba/system-stats"
-name       = "system-stats"
-version    = "1.0.0"
+id         = "taktojakuba/tui-wg"
+name       = "tui-wg"
+version    = "0.4.7"
 plugin_api = 3
-author     = "kuba"
+author     = "taktojakuba"
 
 [[widget]]
 id    = "volume"
@@ -16,6 +16,13 @@ entry = "battery.luau"
 [[widget]]
 id    = "wifi"
 entry = "wifi.luau"
+
+  [[widget.setting]]
+  key       = "wifi_interface"
+  type      = "string"
+  label_key = "settings.wifi_interface.label"
+  default   = "wlan0"
+
 [[widget]]
 id    = "cpu"
 entry = "cpu.luau"
@@ -26,8 +33,15 @@ entry = "ram.luau"
 [[widget]]
 id = "weather"
 entry = "weather.luau"
+
+  [[widget.setting]]
+  key       = "location"
+  type      = "string"
+  label_key = "settings.location.label"
+  default   = "Warsaw"
+
 [[widget]]
-id    = "viz"
+id    = "visualizer"
 entry = "visualizer.luau"
 
   [[widget.setting]]

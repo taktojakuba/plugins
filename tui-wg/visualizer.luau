@@ -1,9 +1,11 @@
+local SCRIPT_DIR = noctalia.pluginDir() .. "/"
+
 function update()
   noctalia.setUpdateInterval(100)
   local w = noctalia.getConfig("width") or 30
 
   noctalia.runAsync(
-    "SIZE=" .. w .. " " .. noctalia.expandPath("~/.config/noctalia/plugins/system-stats/visualizer.sh"),
+    "SIZE=" .. w .. " " .. SCRIPT_DIR .. "visualizer.sh",
     function(result)
       if result.exitCode == 0 then
         local viz = result.stdout:gsub("%s+$", "")
