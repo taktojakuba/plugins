@@ -96,11 +96,10 @@ for v in $spectrum; do
   if [ "$v" = "1" ]; then body="${body}="; else body="${body}-"; fi
 done
 
-inner=$(( ${#body} + 2 ))
-pd=$((WIDTH - inner))
+pd=$((WIDTH - ${#body}))
 lp=$((pd / 2))
 rp=$((pd - lp))
 [ "$lp" -gt 0 ] && printf "%*s" "$lp" | tr " " "-"
-printf '/%s\\' "$body"
+printf '%s' "$body"
 [ "$rp" -gt 0 ] && printf "%*s" "$rp" | tr " " "-"
 echo
