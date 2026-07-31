@@ -1,6 +1,6 @@
 id         = "taktojakuba/tui-wg"
 name       = "tui-wg"
-version    = "0.4.9"
+version    = "0.5.0"
 plugin_api = 3
 author     = "taktojakuba"
 
@@ -89,4 +89,20 @@ entry = "brackets.luau"
   options   = [
     { value = "left",  label_key = "settings.side.left" },
     { value = "right", label_key = "settings.side.right" },
+  ]
+
+[[widget]]
+id    = "apptray"
+entry = "apptray.luau"
+
+  [[widget.setting]]
+  key       = "apps"
+  type      = "string_list"
+  label_key = "settings.apps.label"
+  default   = [
+    "Steam|steam|steam",
+    "Vesktop|vesktop|vesktop",
+    "OBS Studio|obs|obs",
+    "Discord|discord|discord",
+    "Spotify|spotify|spotify",
   ]
