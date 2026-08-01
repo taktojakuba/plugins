@@ -62,3 +62,7 @@ entry = "brackets.luau"
     { value = "right", label_key = "settings.side.right" },
   ]
 
+[[widget]]
+id    = "apptray"
+entry = "apptray.luau"
+

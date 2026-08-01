@@ -58,9 +58,7 @@ count="${#MENU[@]}"
 
 # list mode: print the running app names
 if [[ -z "$name" ]]; then
-  for (( i = 0; i < count; i++ )); do
-    echo "${MENU[$i]}"
-  done
+  printf '%s\n' "${MENU[@]}"
   exit 0
 fi
 
