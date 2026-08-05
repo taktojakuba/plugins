@@ -66,3 +66,10 @@ entry = "brackets.luau"
 id    = "apptray"
 entry = "apptray.luau"
 
+[[widget]]
+id = "matrix"
+entry = "matrix.luau"
+
+[[widget]]
+id = "matrix-volume"
+entry = "volume-matrix.luau"
